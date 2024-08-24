@@ -37,6 +37,7 @@ namespace CleanBase.Core.Api
 {
     public abstract class StartupBase<TSetting> where TSetting : AppSettings
     {
+		private string _primaryConfigSection;
         private const string CorsPolicyName = "AllOrigins";
         public IConfiguration Configuration { get; }
         protected bool IsSupportHsts => false;
@@ -48,12 +49,12 @@ namespace CleanBase.Core.Api
         {
             Configuration = configuration;
             EnableAuth = enableAuth;
-            InitializeSettings(primaryConfigSection);
+            _primaryConfigSection = primaryConfigSection;
         }
 
-        private void InitializeSettings(string primaryConfigSection)
+        private void InitializeSettings()
         {
-            var section = Configuration.GetSection(primaryConfigSection);
+            var section = Configuration.GetSection(_primaryConfigSection);
             Services.Configure<TSetting>(section);
             Settings = section.Get<TSetting>();
             AppSettings<TSetting>.Instance = Settings;
@@ -64,6 +65,7 @@ namespace CleanBase.Core.Api
         public virtual void ConfigureServices(IServiceCollection services)
         {
             Services = services;
+            InitializeSettings();
             ConfigureCoreServices();
             ConfigureAuthentication();
             ConfigureMvc();
