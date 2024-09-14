@@ -36,7 +36,7 @@ namespace CleanBase.Core.Api.Extensions
 			DomainException domainException)
 		{
 			context.Response.StatusCode = domainException.HttpCode;
-			var response = new FailActionResponse(domainException.Message, domainException.ErrorCode, domainException.ErrorDetails);
+			var response = new ActionResponse(true,domainException.Message, domainException.ErrorCode, domainException.ErrorDetails);
 			var jsonResponse = JsonConvert.SerializeObject(response, JsonSettings);
 
 			LogError(logger, identityProvider, jsonResponse);
@@ -46,18 +46,18 @@ namespace CleanBase.Core.Api.Extensions
 
 		private static string FormatError(Exception error)
 		{
-			var errorDetails = new List<ErrorCodeDetail>();
+			//var errorDetails = new List<ErrorCodeDetail>();
 
-			if (error.InnerException != null)
-			{
-				errorDetails.Add(new ErrorCodeDetail { Message = error.InnerException.Message });
-			}
+			//if (error.InnerException != null)
+			//{
+			//	errorDetails.Add(new ErrorCodeDetail { Message = error.InnerException.Message });
+			//}
 
 			var responseMessage = error.InnerException == null
 				? "An unexpected error occurred. Please try again later."
 				: error.Message;
 
-			var response = new FailActionResponse(responseMessage, errorDetails);
+			var response = new FailActionResponse(responseMessage,"SERVER_ERROR",null);
 			return JsonConvert.SerializeObject(response, JsonSettings);
 		}
 
