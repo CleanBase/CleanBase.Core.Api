@@ -6,11 +6,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace CleanBase.Core.Api.Extensions
 {
@@ -36,7 +32,7 @@ namespace CleanBase.Core.Api.Extensions
 			DomainException domainException)
 		{
 			context.Response.StatusCode = 200;
-			var response = new ActionResponse(true,domainException.Message, domainException.ErrorCode, domainException.ErrorDetails);
+			var response = new FailActionResponse(domainException.Message, domainException.ErrorCode, domainException.ErrorDetails);
 			var jsonResponse = JsonConvert.SerializeObject(response, JsonSettings);
 
 			LogError(logger, identityProvider, jsonResponse);
