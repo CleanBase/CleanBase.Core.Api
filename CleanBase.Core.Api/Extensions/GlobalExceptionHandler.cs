@@ -35,7 +35,7 @@ namespace CleanBase.Core.Api.Extensions
 			HttpContext context,
 			DomainException domainException)
 		{
-			context.Response.StatusCode = domainException.HttpCode;
+			context.Response.StatusCode = 200;
 			var response = new ActionResponse(true,domainException.Message, domainException.ErrorCode, domainException.ErrorDetails);
 			var jsonResponse = JsonConvert.SerializeObject(response, JsonSettings);
 
